@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Редактирование</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            margin-top: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .profile-container {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-container img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Редактирование книги</h1>
+
+    <div class="profile-container">
+        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+        <a href="/logout" th:text="${user}">User</a>
+    </div>
+
+    <form th:method="patch" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
+        <div class="form-group">
+            <label for="name">*Название:</label>
+            <input type="text" th:field="*{name}" id="name" placeholder="Введите название книги" required>
+            <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="author">*Автор:</label>
+            <input type="text" id="author" th:field="*{author}" placeholder="Введите автора книги" required>
+            <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="language">*Язык:</label>
+            <input type="text" id="language" th:field="*{language}" placeholder="Введите язык книги" required>
+            <div style="color: red" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="year">*Год издания:</label>
+            <input type="number" id="year" th:field="*{year}" placeholder="Введите год издания" required>
+            <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="genres">Жанры:</label>
+            <input type="text" id="genres" th:field="*{genres}" placeholder="Введите жанры (через запятую)">
+            <div style="color: red" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Описание:</label>
+            <textarea id="description" th:field="*{description}" placeholder="Введите описание книги"></textarea>
+            <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="ISBN">ISBN:</label>
+            <input type="text" id="ISBN" th:field="*{ISBN}" placeholder="Введите ISBN книги">
+            <div style="color: red" th:if="${#fields.hasErrors('ISBN')}" th:errors="*{ISBN}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="amountPages">Количество страниц:</label>
+            <input type="number" id="amountPages" th:field="*{amountPages}" placeholder="Введите количество страниц">
+            <div style="color: red" th:if="${#fields.hasErrors('amountPages')}" th:errors="*{amountPages}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="rate">Рейтинг (от 0 до 10):</label>
+            <input type="number" step="0.1" min="0" max="10" id="rate" th:field="*{rate}" placeholder="Введите рейтинг книги">
+            <div style="color: red" th:if="${#fields.hasErrors('rate')}" th:errors="*{rate}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="isNew">Новинка:</label>
+            <input type="checkbox" id="isNew" th:field="*{isNew}">
+        </div>
+
+        <div class="form-group">
+            <label for="imagePath">Путь к изображению:</label>
+            <input type="text" id="imagePath" th:field="*{imagePath}" placeholder="Введите путь к изображению">
+        </div>
+
+        <div class="form-group">
+            <label for="price">*Цена:</label>
+            <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="Введите цену" required>
+            <div style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">*Количество на складе:</label>
+            <input type="number" th:field="*{amount}" id="amount" placeholder="Введите количество на складе" required>
+            <div style="color: red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
+        </div>
+
+        <button type="submit">Подтвердить изменения</button>
+    </form>
+</div>
+</body>
+</html>

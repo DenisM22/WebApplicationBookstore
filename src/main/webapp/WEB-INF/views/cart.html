@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Корзина</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        tfoot th {
+            text-align: right;
+            font-size: 1.2em;
+            border-top: 2px solid #ddd;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff1a1a;
+        }
+
+        .profile-container {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-container img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Корзина</h1>
+
+    <div class="profile-container">
+        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+        <a href="/logout" th:text="${user}">User</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название книги</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Сумма</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+        <tbody th:each="row : ${cart}">
+        <tr>
+            <td>
+                <div th:text="${row.getBook_id()}"></div>
+            </td>
+            <td>
+                <a th:href="@{/book/{id}(id=${row.getBook_id()})}" th:text="${row.getName()}"></a>
+            </td>
+            <td>
+                <div th:text="${row.getPrice()}"></div>
+            </td>
+            <td>
+                <div th:text="${row.getAmount()}"></div>
+            </td>
+            <td>
+                <div th:text="${row.getPrice()*row.getAmount()}"></div>
+            </td>
+            <td>
+                <div>
+                    <form th:method="DELETE" th:action="@{/cart}">
+                        <input type="hidden" name="book_id" th:value="${row.getBook_id()}">
+                        <button type="submit" class="delete-btn">Удалить из корзины</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="5">Итого к оплате:</th>
+            <th>
+                <div th:text="${totalCheck}"></div>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+
+
+    <div th:if="${cart != null} and ${cart.size()} > 0">
+        <form th:method="DELETE" th:action="@{/cart/clear}">
+            <button type="submit" class="delete-btn">Очистить корзину</button>
+        </form>
+    </div>
+
+
+</div>
+</body>
+</html>

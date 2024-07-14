@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Electronic Book Store</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .profile-container {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-container img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<h1>Electronic Book Store</h1>
+
+<div class="profile-container">
+    <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+    <a href="/logout" th:text="${user}">User</a>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название книги</th>
+            <th>Количество на складе</th>
+        </tr>
+        </thead>
+        <tbody th:each="book : ${books}">
+        <tr>
+            <td>
+                <div th:text="${book.getId()}"></div>
+            </td>
+            <td>
+                <a th:href="@{/book/{id}(id=${book.getId()})}" th:text="${book.getName()}"></a>
+            </td>
+            <td>
+                <div th:text="${book.getAmountView()}"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr/>
+<a href="/employee/add-book" class="btn">Добавить новую книгу</a>
+<a href="/cart" class="btn">Посмотреть корзину</a>
+
+</body>
+</html>

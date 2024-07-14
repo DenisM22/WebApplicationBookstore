@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title th:text="${book.getName()}"></title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .book-details {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .book-details img {
+            max-width: 300px;
+            height: auto;
+            margin-right: 20px;
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-info div {
+            margin-bottom: 10px;
+        }
+
+        .rate {
+            font-size: 1.5em;
+        }
+
+        .green {
+            color: green;
+        }
+
+        .yellow {
+            color: orange;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .new-book {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .genres, .price, .availability {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            margin-bottom: 20px;
+        }
+
+        .characteristics {
+            margin-bottom: 20px;
+        }
+
+        .characteristics span {
+            display: inline-block;
+            width: 150px;
+        }
+
+        .cart-actions, .manage-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .cart-actions button, .manage-actions button, .cart-actions a, .manage-actions a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            width: 200px;
+        }
+
+        .cart-actions button:hover, .manage-actions button:hover, .cart-actions a:hover, .manage-actions a:hover {
+            background-color: #0056b3;
+        }
+
+        .profile-container {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-container img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="profile-container">
+    <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+    <a href="/logout" th:text="${user}">User</a>
+</div>
+
+<div class="container">
+    <h1 th:text="${book.getName()}"></h1>
+    <h3 th:text="${book.getAuthor()}"></h3>
+    <div class="book-details">
+        <img th:src="${book.getImagePath()}" alt="Book Image"/>
+        <div class="book-info">
+
+            <div class="rate"
+                 th:text="${book.getRate()}"
+                 th:classappend="${book.getRate() > 8 ? 'green bold' : (book.getRate() > 5 ? 'yellow bold' : 'red bold')}">
+            </div>
+
+            <div th:if="${book.getIsNew()}" class="new-book">Новинка</div>
+
+            <div class="genres" th:text="${book.getGenres()}"></div>
+            <div class="price">Цена: <span th:text="${book.getPrice()}"></span></div>
+            Наличие: <span class="availability" th:text="${book.getAmountView()}"></span>
+
+            <div class="cart-actions">
+                <form th:method="POST" th:action="@{/cart}">
+                    <input type="hidden" th:field="*{book.id}" th:value="${book.getId()}">
+                    <div th:if="${containsCart}">
+                        <p>Товар уже есть в корзине в количестве <span th:text="${countCart}"></span></p>
+                        <button type="submit">Добавить еще</button>
+                    </div>
+                    <div th:unless="${containsCart}">
+                        <button type="submit">Добавить в корзину</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <h2>Описание</h2>
+    <div class="description" th:text="${book.getDescription()}"></div>
+
+    <div class="characteristics">
+        <h2>Характеристики</h2>
+        <div>ID: <span th:text="${book.getId()}"></span></div>
+        <div>Автор: <span th:text="${book.getAuthor()}"></span></div>
+        <div>Язык: <span th:text="${book.getLanguage()}"></span></div>
+        <div>Количество страниц: <span th:text="${book.getAmountPages()}"></span></div>
+        <div>Год издания: <span th:text="${book.getYear()}"></span></div>
+        <div>ISBN: <span th:text="${book.getISBN()}"></span></div>
+    </div>
+
+    <div class="manage-actions">
+        <a th:href="@{/cart}">Посмотреть, что в корзине</a>
+        <a th:href="@{/book/{id}/edit(id=${book.getId()})}">Редактировать книгу</a>
+        <form th:method="DELETE" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
+            <button type="submit">Удалить книгу</button>
+        </form>
+    </div>
+</div>
+
+</body>
+
+</html>
