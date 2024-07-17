@@ -29,7 +29,7 @@
             color: #333;
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.7rem;
             text-align: left;
         }
         .form-group label {
@@ -44,24 +44,50 @@
             border-radius: 4px;
         }
         .form-group input:focus {
-            border-color: #007bff;
+            border-color: #21a1f1;
             outline: none;
         }
         .form-group button {
-            width: 100%;
+            width: 104%;
             padding: 0.75rem;
-            background-color: #007bff;
+            background-color: #21a1f1;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             color: #fff;
             font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .form-group button:hover {
-            background-color: #0056b3;
+            background-color: #007bff;
         }
-
+        .signup-link {
+            display: block;
+            width: 98%;
+            padding: 0.75rem;
+            background-color: #5bc72d;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .signup-link:hover {
+            background-color: #4fad26;
+        }
+        .error {
+            color: red;
+            margin-top: 1rem;
+        }
+        .logout {
+            color: green;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -69,12 +95,12 @@
     <h1>Вход</h1>
     <form th:method="POST" th:action="@{/perform-login}" >
         <div class="form-group">
-            <label>Имя пользователя:</label>
-            <input type="text" name="username"/>
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username" required/>
         </div>
         <div class="form-group">
-            <label>Пароль:</label>
-            <input type="password" name="password"/>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required/>
         </div>
         <div class="form-group">
             <button type="submit">Войти</button>
@@ -82,8 +108,11 @@
     </form>
 
     <div class="form-group">
-        <button type="button" href="/signup" th:text="${user}">Зарегистрироваться</button>
+        <a class="signup-link" th:href="@{/signup}">Зарегистрироваться</a>
     </div>
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+    <div class="logout" th:if="${logout}" th:text="${logout}"></div>
+
 </div>
 </body>
 </html>

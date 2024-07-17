@@ -7,22 +7,86 @@
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png"/>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
         }
 
+        header {
+            background-color: #282c34;
+            padding: 10px 20px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links a, .nav-links button {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: color 0.3s;
+            padding: 10px 20px;
+            background-color: #61dafb;
+            border-radius: 5px;
+            text-align: center;
+            border: none;
+        }
+
+        .nav-links .btn {
+            background-color: #61dafb;
+            color: #282c34;
+        }
+
+        .nav-links a:hover, .nav-links button:hover {
+            background-color: #21a1f1;
+            color: #fff;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .profile-container img {
+            border-radius: 50%;
+            margin-right: 10px;
+            width: 32px;
+            height: 32px;
+        }
+
         .container {
             width: 80%;
             margin: auto;
-            padding: 20px;
+            padding: 5px;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
         }
 
-        h1, h2 {
+        h1 {
+            color: #fff;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        h3 {
             color: #333;
         }
 
@@ -100,7 +164,7 @@
         .cart-actions button, .manage-actions button, .cart-actions a, .manage-actions a {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #21a1f1;
             color: #fff;
             text-decoration: none;
             border: none;
@@ -112,39 +176,35 @@
         }
 
         .cart-actions button:hover, .manage-actions button:hover, .cart-actions a:hover, .manage-actions a:hover {
-            background-color: #0056b3;
+            background-color: #61dafb;
         }
-
-        .profile-container {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .profile-container img {
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
     </style>
 </head>
 
 <body>
 
-<div class="profile-container">
-    <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-    <a href="/logout" th:text="${user}">User</a>
-</div>
+<header>
+    <h1>Electronic Book Store</h1>
+    <div class="nav-links">
+        <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/employee/add-book}" class="btn">Добавить новую книгу</a>
+        <a th:if="${user.getRole().equals('CLIENT')}" th:href="@{/cart}" class="btn">Посмотреть корзину</a>
+        <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/book/{id}/edit(id=${book.getId()})}" class="btn">Редактировать книгу</a>
+        <form th:if="${user.getRole().equals('EMPLOYEE')}" th:method="DELETE" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}" class="delete-form">
+            <button type="submit" class="btn">Удалить книгу</button>
+        </form>
+    </div>
+    <div class="profile-container">
+        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+        <a th:href="@{/profile}" th:text="${user.getUsername()}"></a>
+    </div>
+</header>
 
 <div class="container">
-    <h1 th:text="${book.getName()}"></h1>
+    <h2 th:text="${book.getName()}"></h2>
     <h3 th:text="${book.getAuthor()}"></h3>
     <div class="book-details">
         <img th:src="${book.getImagePath()}" alt="Book Image"/>
         <div class="book-info">
-
             <div class="rate"
                  th:text="${book.getRate()}"
                  th:classappend="${book.getRate() > 8 ? 'green bold' : (book.getRate() > 5 ? 'yellow bold' : 'red bold')}">
@@ -156,7 +216,7 @@
             <div class="price">Цена: <span th:text="${book.getPrice()}"></span></div>
             Наличие: <span class="availability" th:text="${book.getAmountView()}"></span>
 
-            <div class="cart-actions">
+            <div class="cart-actions" th:if="${user.getRole().equals('CLIENT') && book.getAmount() > 0}">
                 <form th:method="POST" th:action="@{/cart}">
                     <input type="hidden" th:field="*{book.id}" th:value="${book.getId()}">
                     <div th:if="${containsCart}">
@@ -180,16 +240,8 @@
         <div>Автор: <span th:text="${book.getAuthor()}"></span></div>
         <div>Язык: <span th:text="${book.getLanguage()}"></span></div>
         <div>Количество страниц: <span th:text="${book.getAmountPages()}"></span></div>
-        <div>Год издания: <span th:text="${book.getYear()}"></span></div>
+        <div>Год издания: <span th:text="${book.getRelease()}"></span></div>
         <div>ISBN: <span th:text="${book.getISBN()}"></span></div>
-    </div>
-
-    <div class="manage-actions">
-        <a th:href="@{/cart}">Посмотреть, что в корзине</a>
-        <a th:href="@{/book/{id}/edit(id=${book.getId()})}">Редактировать книгу</a>
-        <form th:method="DELETE" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
-            <button type="submit">Удалить книгу</button>
-        </form>
     </div>
 </div>
 

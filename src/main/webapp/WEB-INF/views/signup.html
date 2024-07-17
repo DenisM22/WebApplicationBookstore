@@ -15,7 +15,7 @@
             height: 80vh;
             margin: 0;
         }
-        .login-container {
+        .signup-container {
             background-color: #fff;
             padding: 2rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -29,7 +29,7 @@
             color: #333;
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.7rem;
             text-align: left;
         }
         .form-group label {
@@ -48,42 +48,46 @@
             outline: none;
         }
         .form-group button {
-            width: 100%;
+            display: block;
+            width: 104%;
             padding: 0.75rem;
-            background-color: #007bff;
+            background-color: #5bc72d;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             color: #fff;
             font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .form-group button:hover {
-            background-color: #0056b3;
+            background-color: #4fad26;
         }
-
+        .error {
+            color: red;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
-<div class="login-container">
+<div class="signup-container">
     <h1>Регистрация</h1>
-    <form th:method="POST" th:action="@{/perform_signup}" >
+    <form th:method="POST" th:action="@{/signup}" th:object="${user}">
         <div class="form-group">
-            <label>Имя пользователя:</label>
-            <input type="text" name="username"/>
+            <label for="username">Имя пользователя:</label>
+            <input type="text" th:field="*{username}" id="username" required/>
+            <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
         </div>
         <div class="form-group">
-            <label>Пароль:</label>
-            <input type="password" name="password"/>
+            <label for="password">Пароль:</label>
+            <input type="password" th:field="*{password}" id="password" required/>
+            <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
         </div>
         <div class="form-group">
-            <button type="submit">Войти</button>
+            <button type="submit">Подтвердить регистрацию</button>
         </div>
     </form>
-
-    <div class="form-group">
-        <button type="button" href="/signup" th:text="${user}">Зарегистрироваться</button>
-    </div>
 </div>
 </body>
 </html>

@@ -7,89 +7,121 @@
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            text-align: center;
-        }
-
-        h1 {
             color: #333;
-            margin-top: 20px;
         }
 
-        .table-container {
-            width: 80%;
-            margin: 20px auto;
-            background-color: #fff;
+        header {
+            background-color: #282c34;
+            padding: 10px 20px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #282c34;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .profile-container img {
+            border-radius: 50%;
+            margin-right: 5px;
+            width: 32px;
+            height: 32px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            margin: 20px auto;
+        }
+
+        .book-item {
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .book-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-item img {
+            height: 300px;
+            width: 200px;
             border-radius: 10px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        a {
-            color: #3498db;
+        .book-item a {
+            color: #282c34;
             text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            transition: color 0.3s;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .book-item a:hover {
+            color: #61dafb;
+        }
+
+        .book-item .amount {
+            color: #777;
+            margin-top: 5px;
         }
 
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #61dafb;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
-            margin-top: 10px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            text-align: center;
         }
 
         .btn:hover {
-            background-color: #2980b9;
-        }
-
-        .profile-container {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .profile-container img {
-            border-radius: 50%;
-            margin-right: 10px;
+            background-color: #21a1f1;
         }
 
     </style>
@@ -97,41 +129,27 @@
 
 <body>
 
-<h1>Electronic Book Store</h1>
+<header>
+    <h1>Electronic Book Store</h1>
+    <div class="nav-links">
+        <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/employee/add-book}" class="btn">Добавить новую книгу</a>
+        <a th:if="${user.getRole().equals('CLIENT')}" th:href="@{/cart}" class="btn">Посмотреть корзину</a>
+        <div class="profile-container">
+            <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+            <a th:href="@{/profile}" th:text="${user.getUsername()}" style="color: white">User</a>
+        </div>
+    </div>
+</header>
 
-<div class="profile-container">
-    <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-    <a href="/logout" th:text="${user}">User</a>
+<div class="grid-container">
+    <div class="book-item" th:each="book : ${books}">
+        <a th:href="@{/book/{id}(id=${book.getId()})}">
+            <img th:src="${book.getImagePath()}" alt="Book Image" />
+        </a>
+        <a th:href="@{/book/{id}(id=${book.getId()})}" th:text="${book.getName()}"></a>
+        <div class="amount" th:text="${book.getAmountView()}"></div>
+    </div>
 </div>
-
-<div class="table-container">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Название книги</th>
-            <th>Количество на складе</th>
-        </tr>
-        </thead>
-        <tbody th:each="book : ${books}">
-        <tr>
-            <td>
-                <div th:text="${book.getId()}"></div>
-            </td>
-            <td>
-                <a th:href="@{/book/{id}(id=${book.getId()})}" th:text="${book.getName()}"></a>
-            </td>
-            <td>
-                <div th:text="${book.getAmountView()}"></div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<hr/>
-<a href="/employee/add-book" class="btn">Добавить новую книгу</a>
-<a href="/cart" class="btn">Посмотреть корзину</a>
 
 </body>
 </html>

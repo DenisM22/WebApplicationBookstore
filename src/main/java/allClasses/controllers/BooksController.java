@@ -1,44 +1,44 @@
 package allClasses.controllers;
 
 import allClasses.dao.BookDAO;
+import allClasses.dao.CartDAO;
 import allClasses.models.Book;
+import allClasses.models.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.sql.SQLException;
-
 @Controller
 public class BooksController {
 
     private final BookDAO bookDAO;
+    private final CartDAO cartDAO;
+    private Long userId;
 
     @Autowired
-    public BooksController(BookDAO bookDAO) {
+    public BooksController(BookDAO bookDAO, CartDAO cartDAO) {
         this.bookDAO = bookDAO;
+        this.cartDAO = cartDAO;
     }
 
     // Все книги
     @GetMapping
-    public String showAllBooks(Model model) throws SQLException {
+    public String showAllBooks(Model model) {
         model.addAttribute("books", bookDAO.getAllBooks());
         return "books";
     }
 
     // Детальная информация о книге
     @GetMapping("/book/{id}")
-    public String showBook(@PathVariable("id") long id, Model model) {
-        model.addAttribute("book", bookDAO.getBook(id));
-        model.addAttribute("containsCart", bookDAO.containsCart(id));
-        model.addAttribute("countCart", bookDAO.countCart(id));
+    public String showBook(@PathVariable("id") long bookId, Model model) {
+        model.addAttribute("book", bookDAO.getBook(bookId));
+        model.addAttribute("containsCart", cartDAO.containsCart(userId, bookId));
+        model.addAttribute("countCart", cartDAO.countCart(userId, bookId));
         return "detailed-book";
     }
 
@@ -89,10 +89,11 @@ public class BooksController {
         return "redirect:/";
     }
 
+    // Получить текущего пользователя
     @ModelAttribute("user")
-    public String getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+    public User getCurrentUser(@AuthenticationPrincipal User user) {
+        this.userId = user.getId();
+        return user;
     }
 
 }

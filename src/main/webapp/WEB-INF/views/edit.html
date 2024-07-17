@@ -49,7 +49,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #21a1f1;
             border: none;
             border-radius: 4px;
             color: #fff;
@@ -57,7 +57,7 @@
             cursor: pointer;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #007bff;
         }
         .form-group {
             margin-bottom: 15px;
@@ -84,7 +84,7 @@
 
     <div class="profile-container">
         <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-        <a href="/logout" th:text="${user}">User</a>
+        <a href="/profile" th:text="${user.getUsername()}">User</a>
     </div>
 
     <form th:method="patch" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
@@ -107,9 +107,9 @@
         </div>
 
         <div class="form-group">
-            <label for="year">*Год издания:</label>
-            <input type="number" id="year" th:field="*{year}" placeholder="Введите год издания" required>
-            <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
+            <label for="release">*Год издания:</label>
+            <input type="number" id="release" th:field="*{release}" placeholder="Введите год издания" required>
+            <div style="color: red" th:if="${#fields.hasErrors('release')}" th:errors="*{release}"></div>
         </div>
 
         <div class="form-group">

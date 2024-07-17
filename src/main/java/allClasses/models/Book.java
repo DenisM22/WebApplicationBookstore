@@ -1,16 +1,17 @@
 package allClasses.models;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 public class Book {
+
     private long id;
 
     @NotEmpty(message = "Обязательное поле")
-    @Size(min = 2, max = 30, message = "Название должно быть от 2 до 30 символов")
+    @Size(min = 2, max = 50, message = "Название должно быть от 2 до 50 символов")
     private String name;
 
     @NotEmpty(message = "Обязательное поле")
-    @Size(min = 2, max = 30, message = "Имя автора должно быть от 3 до 50 символов")
+    @Size(min = 2, max = 50, message = "Имя автора должно быть от 2 до 50 символов")
     private String author;
 
     @NotEmpty(message = "Язык не может быть пустым")
@@ -18,7 +19,7 @@ public class Book {
 
     @NotNull(message = "Обязательное поле")
     @Digits(integer = 4, fraction = 0, message = "Введите корректный год издания")
-    private int year;
+    private int release;
 
     @Size(max = 100, message = "Поле жанры не должно превышать 100 символов")
     private String genres;
@@ -26,7 +27,7 @@ public class Book {
     @Size(max = 1000, message = "Описание не должно превышать 1000 символов")
     private String description;
 
-    @Pattern(regexp = "^$|\\d{3}-\\d{10}", message = "ISBN должен соответствовать формату 123-1234567890")
+    @Size(max = 20, message = "ISBN не должно превышать 20 символов")
     private String ISBN;
 
     @Min(value = 0, message = "Количество страниц не может быть меньше 0")
@@ -68,8 +69,8 @@ public class Book {
         return language;
     }
 
-    public int getYear() {
-        return year;
+    public int getRelease() {
+        return release;
     }
 
     public String getGenres() {
@@ -124,8 +125,8 @@ public class Book {
         this.language = language;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setRelease(int release) {
+        this.release = release;
     }
 
     public void setGenres(String genres) {

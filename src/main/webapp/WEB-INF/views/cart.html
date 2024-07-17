@@ -56,7 +56,7 @@
         }
 
         a {
-            color: #007bff;
+            color: #21a1f1;
             text-decoration: none;
         }
 
@@ -75,6 +75,20 @@
 
         .delete-btn:hover {
             background-color: #ff1a1a;
+        }
+
+        .order-btn {
+            width: 9.8%;
+            margin-top: 5px;
+            background-color: #5bc72d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .order-btn:hover {
+            background-color: #4fad26;
         }
 
         .profile-container {
@@ -96,11 +110,12 @@
 <body>
 
 <div class="container">
+
     <h1>Корзина</h1>
 
     <div class="profile-container">
         <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-        <a href="/logout" th:text="${user}">User</a>
+        <a href="/profile" th:text="${user.getUsername()}">User</a>
     </div>
 
     <table>
@@ -114,27 +129,28 @@
             <th>Действие</th>
         </tr>
         </thead>
-        <tbody th:each="row : ${cart}">
+        <tbody th:each="book : ${cart}">
         <tr>
             <td>
-                <div th:text="${row.getBook_id()}"></div>
+                <div th:text="${book.getBookId()}"></div>
             </td>
             <td>
-                <a th:href="@{/book/{id}(id=${row.getBook_id()})}" th:text="${row.getName()}"></a>
+                <a th:href="@{/book/{id}(id=${book.getBookId()})}" th:text="${book.getName()}"></a>
             </td>
             <td>
-                <div th:text="${row.getPrice()}"></div>
+                <div th:text="${book.getPrice()}"></div>
             </td>
             <td>
-                <div th:text="${row.getAmount()}"></div>
+                <div th:text="${book.getAmount()}"></div>
+
             </td>
             <td>
-                <div th:text="${row.getPrice()*row.getAmount()}"></div>
+                <div th:text="${book.getPrice()*book.getAmount()}"></div>
             </td>
             <td>
                 <div>
                     <form th:method="DELETE" th:action="@{/cart}">
-                        <input type="hidden" name="book_id" th:value="${row.getBook_id()}">
+                        <input type="hidden" name="book_id" th:value="${book.getBookId()}">
                         <button type="submit" class="delete-btn">Удалить из корзины</button>
                     </form>
                 </div>
@@ -156,8 +172,10 @@
         <form th:method="DELETE" th:action="@{/cart/clear}">
             <button type="submit" class="delete-btn">Очистить корзину</button>
         </form>
+        <form th:method="POST" th:action="@{/cart/add-order}">
+            <button type="submit" class="order-btn">Оформить заказ</button>
+        </form>
     </div>
-
 
 </div>
 </body>

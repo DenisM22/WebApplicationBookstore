@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Профиль</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        tfoot th {
+            text-align: right;
+            font-size: 1.2em;
+            border-top: 2px solid #ddd;
+        }
+
+        a {
+            color: #21a1f1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-info img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-info div {
+            margin-right: 20px;
+        }
+
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff1a1a;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Профиль</h1>
+
+    <div class="profile-container">
+        <div class="profile-info">
+            <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+            <div>ID: <span th:text="${user.getId()}"></span></div>
+            <div>Имя: <span th:text="${user.getUsername()}"></span></div>
+        </div>
+        <a class="logout-btn" href="/logout">Выйти из профиля</a>
+    </div>
+
+    <h2>Заказы</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название книги</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Сумма</th>
+            <th>Дата покупки</th>
+        </tr>
+        </thead>
+        <tbody th:each="order : ${orders}">
+        <tr>
+            <td th:text="${order.getId()}"></td>
+            <td th:text="${order.name}"></td>
+            <td th:text="${order.price}"></td>
+            <td th:text="${order.amount}"></td>
+            <td th:text="${order.price * order.amount}"></td>
+            <td th:text="${#strings.substring(order.createdAt.toString(), 0, 16)}"></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="5">Сумма покупок:</th>
+            <th>
+                <div th:text="${totalCheck}"></div>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+
+</div>
+</body>
+</html>
