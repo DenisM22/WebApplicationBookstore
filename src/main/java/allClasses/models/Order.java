@@ -3,7 +3,7 @@ package allClasses.models;
 import java.sql.Timestamp;
 
 public class Order {
-    private static long id;
+    private long id;
     private long userId;
     private long bookId;
     private int amount;
@@ -12,7 +12,7 @@ public class Order {
     private double price;
 
     public long getId() {
-        return ++id;
+        return id;
     }
 
     public void setId(long id) {

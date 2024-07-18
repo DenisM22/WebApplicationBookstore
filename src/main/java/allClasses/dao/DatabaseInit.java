@@ -61,9 +61,4 @@ public class DatabaseInit {
 
     }
 
-    @PostConstruct
-    private void createUsers() {
-//        jdbcTemplate.update("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", "Emp", "123", "EMPLOYEE");
-    }
-
 }

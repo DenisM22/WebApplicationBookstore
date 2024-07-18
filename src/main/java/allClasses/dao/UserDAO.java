@@ -28,7 +28,9 @@ public class UserDAO {
     }
 
     public boolean checkUser(String username) {
-        return getUser(username) != null;
+        String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        return count != null && count > 0;
     }
 
     public List<Order> getOrders(long userId) {
