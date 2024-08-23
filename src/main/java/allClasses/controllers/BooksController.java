@@ -30,7 +30,7 @@ public class BooksController {
     @GetMapping
     public String showAllBooks(Model model) {
         model.addAttribute("books", bookDAO.getAllBooks());
-        return "books";
+        return "books/books";
     }
 
     // Детальная информация о книге
@@ -39,14 +39,14 @@ public class BooksController {
         model.addAttribute("book", bookDAO.getBook(bookId));
         model.addAttribute("containsCart", cartDAO.containsCart(userId, bookId));
         model.addAttribute("countCart", cartDAO.countCart(userId, bookId));
-        return "detailed-book";
+        return "books/detailed-book";
     }
 
     // Форма для добавления книги
     @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/employee/add-book")
     public String addForm(@ModelAttribute("book") Book book) {
-        return "add-book";
+        return "books/add-book";
     }
 
     // Добавление книги
@@ -55,7 +55,7 @@ public class BooksController {
     public String addNewBook(@ModelAttribute("book") @Valid Book book,
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "add-book";
+            return "books/add-book";
 
         bookDAO.addNewBook(book);
         return "redirect:/";
@@ -66,7 +66,7 @@ public class BooksController {
     @GetMapping("/book/{id}/edit")
     public String editForm(@PathVariable("id") long id, Model model) {
         model.addAttribute("book", bookDAO.getBook(id));
-        return "edit";
+        return "books/edit";
     }
 
     // Редактирование книги
@@ -75,7 +75,7 @@ public class BooksController {
     public String editBook(@ModelAttribute("book") @Valid Book book,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "edit";
+            return "books/edit";
 
         bookDAO.editBook(book);
         return "redirect:/book/{id}";

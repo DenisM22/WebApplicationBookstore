@@ -9,12 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-
 public class User implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Имя пользователя не должно быть пустым")
-    @Size(min = 3, max = 20, message = "Имя пользователя должно быть от 2 до 50 символов")
+    @Size(min = 2, max = 20, message = "Имя пользователя должно быть от 2 до 50 символов")
     private String username;
 
     @NotBlank(message = "Пароль не должен быть пустым")

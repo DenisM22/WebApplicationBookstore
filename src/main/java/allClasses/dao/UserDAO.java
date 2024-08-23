@@ -28,13 +28,12 @@ public class UserDAO {
     }
 
     public boolean checkUser(String username) {
-        String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, username);
-        return count != null && count > 0;
+        boolean result = jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)", Boolean.class, username);
+        return result;
     }
 
     public List<Order> getOrders(long userId) {
-        return jdbcTemplate.query("SELECT orders.user_id, orders.book_id, orders.amount, orders.created_at, books.name, books.price " +
+        return jdbcTemplate.query("SELECT orders.id, orders.user_id, orders.book_id, orders.amount, orders.created_at, books.name, books.price " +
                 "FROM orders JOIN books ON orders.book_id = books.id WHERE user_id = ?", new Object[]{userId}, new BeanPropertyRowMapper<>(Order.class));
     }
 

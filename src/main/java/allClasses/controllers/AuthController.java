@@ -34,28 +34,28 @@ public class AuthController {
             model.addAttribute("logout", "Вы успешно вышли из системы");
         }
 
-        return "login";
+        return "security/login";
     }
 
     @GetMapping("/logout")
     public String showLogoutPage() {
-        return "logout";
+        return "security/logout";
     }
 
     @GetMapping("/signup")
     public String showSignupPage(@ModelAttribute("user") User user) {
-        return "signup";
+        return "security/signup";
     }
 
     @PostMapping("/signup")
     public String signup(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return "signup";
+            return "security/signup";
 
         if (userDAO.checkUser(user.getUsername())) {
             bindingResult.rejectValue("username", "error.user", "Пользователь с таким именем уже существует");
-            return "signup";
+            return "security/signup";
         }
 
         userDAO.addNewUser(user.getUsername(), user.getPassword());

@@ -27,8 +27,8 @@ public class Cart {
         return amount;
     }
 
-    public void setAmount(int cart_amount) {
-        this.amount = cart_amount;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public String getName() {

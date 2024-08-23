@@ -87,7 +87,7 @@
         <a href="/profile" th:text="${user.getUsername()}">User</a>
     </div>
 
-    <form th:method="patch" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
+    <form th:method="PATCH" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
         <div class="form-group">
             <label for="name">*Название:</label>
             <input type="text" th:field="*{name}" id="name" placeholder="Введите название книги" required>

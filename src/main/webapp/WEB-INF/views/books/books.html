@@ -130,7 +130,7 @@
 <body>
 
 <header>
-    <h1>Electronic Book Store</h1>
+    <h1><a th:href="@{/}" style="color: white; text-decoration: none">Electronic Book Store</a></h1>
     <div class="nav-links">
         <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/employee/add-book}" class="btn">Добавить новую книгу</a>
         <a th:if="${user.getRole().equals('CLIENT')}" th:href="@{/cart}" class="btn">Посмотреть корзину</a>

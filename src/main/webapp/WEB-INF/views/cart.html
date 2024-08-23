@@ -22,6 +22,21 @@
             border-radius: 8px;
         }
 
+        header {
+            background-color: #282c34;
+            padding: 10px 20px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
         h1 {
             color: #333;
             text-align: center;
@@ -111,12 +126,17 @@
 
 <div class="container">
 
-    <h1>Корзина</h1>
+    <header>
+        <h1><a th:href="@{/}" style="color: white; text-decoration: none">Electronic Book Store</a></h1>
+        <div class="nav-links">
+            <div class="profile-container">
+                <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+                <a th:href="@{/profile}" th:text="${user.getUsername()}" style="color: white">User</a>
+            </div>
+        </div>
+    </header>
 
-    <div class="profile-container">
-        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-        <a href="/profile" th:text="${user.getUsername()}">User</a>
-    </div>
+    <h1>Корзина</h1>
 
     <table>
         <thead>
@@ -159,9 +179,9 @@
         </tbody>
         <tfoot>
         <tr>
-            <th colspan="5">Итого к оплате:</th>
-            <th>
-                <div th:text="${totalCheck}"></div>
+            <th colspan="4">Итого к оплате:</th>
+            <th >
+                <div style="text-align: left" th:text="${totalCheck}"></div>
             </th>
         </tr>
         </tfoot>

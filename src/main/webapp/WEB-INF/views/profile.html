@@ -131,7 +131,7 @@
         </thead>
         <tbody th:each="order : ${orders}">
         <tr>
-            <td th:text="${order.getId()}"></td>
+            <td th:text="${order.id}"></td>
             <td th:text="${order.name}"></td>
             <td th:text="${order.price}"></td>
             <td th:text="${order.amount}"></td>
@@ -143,7 +143,7 @@
         <tr>
             <th colspan="5">Сумма покупок:</th>
             <th>
-                <div th:text="${totalCheck}"></div>
+                <div style="text-align: left" th:text="${totalCheck}"></div>
             </th>
         </tr>
         </tfoot>

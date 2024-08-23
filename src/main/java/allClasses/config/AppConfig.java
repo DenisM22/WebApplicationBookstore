@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -21,15 +19,18 @@ import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("allClasses")
+@PropertySource("classpath:database.properties")
 @EnableWebMvc
 @EnableAspectJAutoProxy
 public class AppConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
+    private final Environment environment;
 
     @Autowired
-    public AppConfig(ApplicationContext applicationContext) {
+    public AppConfig(ApplicationContext applicationContext, Environment environment) {
         this.applicationContext = applicationContext;
+        this.environment = environment;
     }
 
     @Bean
@@ -61,10 +62,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-                .driverClassName("org.postgresql.Driver")
-                .url("jdbc:postgresql://localhost:5432/book_store")
-                .username("postgres")
-                .password("12345")
+                .driverClassName(environment.getProperty("driver"))
+                .url(environment.getProperty("url"))
+                .username(environment.getProperty("user"))
+                .password(environment.getProperty("password"))
                 .build();
     }
 
