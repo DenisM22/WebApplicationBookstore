@@ -45,9 +45,17 @@ public class CartDAO {
     }
 
     public int countCart(long userId, long bookId) {
-        Integer amount =
-                jdbcTemplate.queryForObject("SELECT AMOUNT FROM carts WHERE user_id = ? AND book_id = ?", new Object[]{userId, bookId}, Integer.class);
-        return (amount != null) ? amount : 0;
+        try {
+            Integer amount = jdbcTemplate.queryForObject(
+                    "SELECT AMOUNT FROM carts WHERE user_id = ? AND book_id = ?",
+                    new Object[]{userId, bookId},
+                    Integer.class
+            );
+            return amount != null ? amount : 0;
+        }
+        catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
     }
 
     public void clearCart(long userId) {
