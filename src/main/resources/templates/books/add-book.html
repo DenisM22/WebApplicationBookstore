@@ -90,9 +90,9 @@
 
     <form th:method="post" th:action="@{/}" th:object="${book}">
         <div class="form-group">
-            <label for="name">*Название:</label>
-            <input type="text" th:field="*{name}" id="name" placeholder="Введите название книги" required>
-            <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <label for="title">*Название:</label>
+            <input type="text" th:field="*{title}" id="title" placeholder="Введите название книги" required>
+            <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
         </div>
 
         <div class="form-group">
@@ -144,8 +144,8 @@
         </div>
 
         <div class="form-group">
-            <label for="isNew">Новинка:</label>
-            <input type="checkbox" id="isNew" th:field="*{isNew}">
+            <label for="latest">Новинка:</label>
+            <input type="checkbox" id="latest" th:field="*{latest}">
         </div>
 
         <div class="form-group">

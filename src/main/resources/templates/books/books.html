@@ -143,10 +143,10 @@
 
 <div class="grid-container">
     <div class="book-item" th:each="book : ${books}">
-        <a th:href="@{/book/{id}(id=${book.getId()})}">
+        <a th:href="@{/book/{id}(id=${book.getBookId()})}">
             <img th:src="${book.getImagePath()}" alt="Book Image" />
         </a>
-        <a th:href="@{/book/{id}(id=${book.getId()})}" th:text="${book.getName()}"></a>
+        <a th:href="@{/book/{id}(id=${book.getBookId()})}" th:text="${book.getTitle()}"></a>
         <div class="amount" th:text="${book.getAmountView()}"></div>
     </div>
 </div>

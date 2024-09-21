@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="6bb6b734-4f85-4268-8cea-6defca9a25a2" name="book_store2 Mapping">
+      <data-sources db="607ffaa2-62ed-4b6f-82a0-ce0ad4a64147" ddl="265b5a51-e20f-4d2b-8b50-26f0847d473f" />
+    </mapping>
+  </component>
+</project>

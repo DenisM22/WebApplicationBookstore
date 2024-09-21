@@ -1,46 +1,60 @@
 package allClasses.models;
 
+import jakarta.persistence.*;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "orders")
 public class Order {
-    private long id;
-    private long userId;
-    private long bookId;
-    private int amount;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private long orderId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderBook> orderBooks;
+
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createdAt;
-    private String name;
-    private double price;
 
-    public long getId() {
-        return id;
+    public Order() {
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Order(User user) {
+        this.user = user;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
-    public long getBookId() {
-        return bookId;
+    public User getUser() {
+        return user;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getAmount() {
-        return amount;
+    public List<OrderBook> getOrderBooks() {
+        return orderBooks;
     }
 
-    public void setAmount(int cart_amount) {
-        this.amount = cart_amount;
+    public void setOrderBooks(List<OrderBook> orderBooks) {
+        this.orderBooks = orderBooks;
     }
 
     public Timestamp getCreatedAt() {
@@ -50,21 +64,4 @@ public class Order {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
 }

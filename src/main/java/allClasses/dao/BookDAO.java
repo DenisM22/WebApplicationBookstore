@@ -1,49 +1,53 @@
 package allClasses.dao;
 
 import allClasses.models.Book;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Repository
+@Transactional
 public class BookDAO {
 
-    private final JdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    @Autowired
-    public BookDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
+    @Transactional(readOnly = true)
     public List<Book> getAllBooks() {
-        return jdbcTemplate.query("SELECT * FROM books", new BeanPropertyRowMapper<>(Book.class));
-    }
-    
-    public Book getBook(long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM books WHERE ID = ?", new Object[]{id}, new BeanPropertyRowMapper<>(Book.class));
+        Session session = entityManager.unwrap(Session.class);
+        List<Book> books = session.createQuery("from Book", Book.class).list();
+        return books;
     }
 
+    @Transactional(readOnly = true)
+    public Book getBook(long bookId) {
+        Session session = entityManager.unwrap(Session.class);
+        Book book = session.get(Book.class, bookId);
+        return book;
+    }
+
+    @Transactional
     public void addNewBook(Book book) {
-        jdbcTemplate.update("INSERT INTO books (name, author, language, release, genres, description, ISBN, amountPages, rate, isNew, imagePath, price, amount) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                book.getName(), book.getAuthor(), book.getLanguage(), book.getRelease(),
-                book.getGenres(), book.getDescription(), book.getISBN(), book.getAmountPages(),
-                book.getRate(), book.getIsNew(), book.getImagePath(), book.getPrice(), book.getAmount());
+        Session session = entityManager.unwrap(Session.class);
+        session.persist(book);
     }
 
-    public void editBook(Book book) {
-        jdbcTemplate.update("UPDATE books SET name = ?, author = ?, language = ?, release = ?, genres = ?," +
-                        "description = ?, ISBN = ?, amountPages = ?, rate = ?, isNew = ?, imagePath = ?, price = ?, " +
-                        "amount = ? WHERE ID = ?", book.getName(), book.getAuthor(), book.getLanguage(),
-                book.getRelease(), book.getGenres(), book.getDescription(), book.getISBN(), book.getAmountPages(),
-                book.getRate(), book.getIsNew(), book.getImagePath(), book.getPrice(), book.getAmount(), book.getId());
+    @Transactional
+    public void editBook(long id, Book book) {
+        book.setBookId(id);
+        Session session = entityManager.unwrap(Session.class);
+        session.merge(book);
     }
 
-    public void deleteBook(long id) {
-        jdbcTemplate.update("DELETE FROM books WHERE ID = ?", id);
+    @Transactional
+    public void deleteBook(long bookId) {
+        Session session = entityManager.unwrap(Session.class);
+        Book book = session.get(Book.class, bookId);
+        session.remove(book);
     }
 
 }

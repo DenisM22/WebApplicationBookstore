@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "carts")
-@IdClass(CartId.class)
-public class Cart implements Serializable {
+@Table(name = "orders_books")
+public class OrderBook implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
@@ -21,21 +23,29 @@ public class Cart implements Serializable {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    public Cart() {
+    public OrderBook() {
     }
 
-    public Cart(User user, Book book, int amount) {
-        this.user = user;
+    public OrderBook(Order order, Book book, int amount) {
+        this.order = order;
         this.book = book;
         this.amount = amount;
     }
 
-    public User getUser() {
-        return user;
+    public long getId() {
+        return id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Book getBook() {

@@ -2,52 +2,56 @@ package allClasses.dao;
 
 import allClasses.models.Order;
 import allClasses.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserDAO {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public User getUser(String username) {
-        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username = ?", new Object[]{username}, new BeanPropertyRowMapper<>(User.class));
+        Session session = entityManager.unwrap(Session.class);
+        return session.createQuery("from User where username = :username", User.class)
+                .setParameter("username", username).uniqueResult();
     }
 
     public void addNewUser(String username, String password) {
-        jdbcTemplate.update("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", username, password, "CLIENT");
+        Session session = entityManager.unwrap(Session.class);
+        User user = new User(username, password);
+        session.persist(user);
     }
 
     public boolean checkUser(String username) {
-        boolean result = jdbcTemplate.queryForObject("SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)", Boolean.class, username);
-        return result;
+        Session session = entityManager.unwrap(Session.class);
+        Long count = (Long) session.createQuery("select count(u) from User u where u.username = :username")
+                .setParameter("username", username)
+                .uniqueResult();
+        return count > 0;
     }
 
     public List<Order> getOrders(long userId) {
-        return jdbcTemplate.query("SELECT orders.id, orders.user_id, orders.book_id, orders.amount, orders.created_at, books.name, books.price " +
-                "FROM orders JOIN books ON orders.book_id = books.id WHERE user_id = ?", new Object[]{userId}, new BeanPropertyRowMapper<>(Order.class));
+        Session session = entityManager.unwrap(Session.class);
+        return session.get(User.class, userId).getOrders();
     }
 
     public void addToOrders(long userId) {
-        jdbcTemplate.update("INSERT INTO orders (user_id, book_id, amount, created_at)" +
-                "SELECT c.user_id, c.book_id, c.amount, CURRENT_TIMESTAMP FROM carts c WHERE user_id = ?", userId);
-        jdbcTemplate.update("DELETE FROM carts WHERE user_id = ?", userId);
+        Session session = entityManager.unwrap(Session.class);
+        User user = session.get(User.class, userId);
     }
 
     public double totalCheck(long userId) {
         double sum = 0;
-        for (Order book : getOrders(userId)) {
-            sum = sum + book.getPrice() * book.getAmount();
-        }
+//        for (Order book : getOrders(userId)) {
+//            sum = sum + book.getPrice() * book.getAmount();
+//        }
         return sum;
     }
 

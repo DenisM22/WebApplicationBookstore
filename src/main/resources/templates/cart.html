@@ -152,25 +152,25 @@
         <tbody th:each="book : ${cart}">
         <tr>
             <td>
-                <div th:text="${book.getBookId()}"></div>
+                <div th:text="${book.getBook().getBookId()}"></div>
             </td>
             <td>
-                <a th:href="@{/book/{id}(id=${book.getBookId()})}" th:text="${book.getName()}"></a>
+                <a th:href="@{/book/{id}(id=${book.getBook().getBookId()})}" th:text="${book.getBook().getTitle()}"></a>
             </td>
             <td>
-                <div th:text="${book.getPrice()}"></div>
+                <div th:text="${book.getBook().getPrice()}"></div>
             </td>
             <td>
                 <div th:text="${book.getAmount()}"></div>
 
             </td>
             <td>
-                <div th:text="${book.getPrice()*book.getAmount()}"></div>
+                <div th:text="${book.getBook().getPrice()*book.getAmount()}"></div>
             </td>
             <td>
                 <div>
                     <form th:method="DELETE" th:action="@{/cart}">
-                        <input type="hidden" name="book_id" th:value="${book.getBookId()}">
+                        <input type="hidden" name="book_id" th:value="${book.getBook().getBookId()}">
                         <button type="submit" class="delete-btn">Удалить из корзины</button>
                     </form>
                 </div>

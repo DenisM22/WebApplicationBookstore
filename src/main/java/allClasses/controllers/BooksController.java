@@ -18,7 +18,7 @@ public class BooksController {
 
     private final BookDAO bookDAO;
     private final CartDAO cartDAO;
-    private Long userId;
+    private long userId;
 
     @Autowired
     public BooksController(BookDAO bookDAO, CartDAO cartDAO) {
@@ -37,7 +37,7 @@ public class BooksController {
     @GetMapping("/book/{id}")
     public String showBook(@PathVariable("id") long bookId, Model model) {
         model.addAttribute("book", bookDAO.getBook(bookId));
-        model.addAttribute("containsCart", cartDAO.containsCart(userId, bookId));
+        model.addAttribute("containsCart", cartDAO.cartContainsBook(userId, bookId));
         model.addAttribute("countCart", cartDAO.countCart(userId, bookId));
         return "books/detailed-book";
     }
@@ -64,7 +64,7 @@ public class BooksController {
     // Форма для редактирования книги
     @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/book/{id}/edit")
-    public String editForm(@PathVariable("id") long id, Model model) {
+    public String showEditForm(@PathVariable("id") long id, Model model) {
         model.addAttribute("book", bookDAO.getBook(id));
         return "books/edit";
     }
@@ -73,11 +73,10 @@ public class BooksController {
     @PreAuthorize("hasRole('EMPLOYEE')")
     @PatchMapping("/book/{id}")
     public String editBook(@ModelAttribute("book") @Valid Book book,
-                           BindingResult bindingResult) {
+                           BindingResult bindingResult, @PathVariable long id) {
         if (bindingResult.hasErrors())
             return "books/edit";
-
-        bookDAO.editBook(book);
+        bookDAO.editBook(id, book);
         return "redirect:/book/{id}";
     }
 
@@ -92,7 +91,7 @@ public class BooksController {
     // Получить текущего пользователя
     @ModelAttribute("user")
     public User getCurrentUser(@AuthenticationPrincipal User user) {
-        this.userId = user.getId();
+        this.userId = user.getUserId();
         return user;
     }
 

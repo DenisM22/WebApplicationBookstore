@@ -31,7 +31,7 @@ public class UsersController {
     // Получить текущего пользователя
     @ModelAttribute("user")
     public User getCurrentUser(@AuthenticationPrincipal User user) {
-        this.userId = user.getId();
+        this.userId = user.getUserId();
         return user;
     }
 

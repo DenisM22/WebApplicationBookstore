@@ -16,7 +16,7 @@ public class CartsController {
 
     private final CartDAO cartDAO;
     private final UserDAO userDAO;
-    private Long userId;
+    private long userId;
 
     @Autowired
     public CartsController(CartDAO cartDAO, UserDAO userDAO) {
@@ -36,7 +36,7 @@ public class CartsController {
     // Добавить книгу в корзину
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
-    public String addToCart(@RequestParam("id") long bookId) {
+    public String addToCart(@RequestParam("bookId") long bookId) {
         cartDAO.addToCart(userId, bookId);
         return "redirect:/cart";
     }
@@ -68,7 +68,7 @@ public class CartsController {
     // Получить текущего пользователя
     @ModelAttribute("user")
     public User getCurrentUser(@AuthenticationPrincipal User user) {
-        this.userId = user.getId();
+        this.userId = user.getUserId();
         return user;
     }
 

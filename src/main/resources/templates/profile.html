@@ -111,7 +111,7 @@
     <div class="profile-container">
         <div class="profile-info">
             <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-            <div>ID: <span th:text="${user.getId()}"></span></div>
+            <div>ID: <span th:text="${user.getUserId()}"></span></div>
             <div>Имя: <span th:text="${user.getUsername()}"></span></div>
         </div>
         <a class="logout-btn" href="/logout">Выйти из профиля</a>
