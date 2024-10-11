@@ -1,7 +1,7 @@
 package allClasses.controllers;
 
-import allClasses.dao.UserDAO;
 import allClasses.models.User;
+import allClasses.services.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
-    private final UserDAO userDAO;
+    private final UsersService usersService;
 
     @Autowired
-    public AuthController(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public AuthController(UsersService usersService) {
+        this.usersService = usersService;
     }
 
     @GetMapping("/login")
@@ -48,17 +48,16 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult) {
+    public String signup(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "security/signup";
 
-        if (userDAO.checkUser(user.getUsername())) {
-            bindingResult.rejectValue("username", "error.user", "Пользователь с таким именем уже существует");
+        if (usersService.checkUser(user.getUsername())) {
+            bindingResult.rejectValue("username", "error.user", "Пользователь с именем " + user.getUsername() + " уже существует");
             return "security/signup";
         }
 
-        userDAO.addNewUser(user.getUsername(), user.getPassword());
+        usersService.saveUser(user);
         return "redirect:/login";
     }
 

@@ -52,7 +52,7 @@ public class Book {
 
     @DecimalMin(value = "0.0", message = "Рейтинг не может быть меньше 0")
     @DecimalMax(value = "10.0", message = "Рейтинг не может быть больше 10")
-    @Column(name = "rate", precision = 4)
+    @Column(name = "rate")
     private double rate;
 
     @Column(name = "latest")
@@ -220,5 +220,11 @@ public class Book {
 
         return result;
     }
+
+    public void addToCart(Cart cart) {
+        this.cart.add(cart);
+    }
+
+
 
 }

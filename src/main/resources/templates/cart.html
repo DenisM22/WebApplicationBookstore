@@ -5,44 +5,9 @@
     <meta charset="utf-8">
     <title>Корзина</title>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="../../static/styles/style.css"/>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        header {
-            background-color: #282c34;
-            padding: 10px 20px;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -68,15 +33,6 @@
             text-align: right;
             font-size: 1.2em;
             border-top: 2px solid #ddd;
-        }
-
-        a {
-            color: #21a1f1;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
         }
 
         .delete-btn {
@@ -105,43 +61,24 @@
         .order-btn:hover {
             background-color: #4fad26;
         }
-
-        .profile-container {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .profile-container img {
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
     </style>
 </head>
 
+<header>
+    <h1><a th:href="@{/}" style="color: white; text-decoration: none">Electronic Book Store</a></h1>
+    <div class="profile-container">
+        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+        <a th:href="@{/profile}" th:text="${user.getUsername()}" style="color: white">User</a>
+    </div>
+</header>
+
 <body>
-
+<h1>Корзина</h1>
 <div class="container">
-
-    <header>
-        <h1><a th:href="@{/}" style="color: white; text-decoration: none">Electronic Book Store</a></h1>
-        <div class="nav-links">
-            <div class="profile-container">
-                <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-                <a th:href="@{/profile}" th:text="${user.getUsername()}" style="color: white">User</a>
-            </div>
-        </div>
-    </header>
-
-    <h1>Корзина</h1>
-
     <table>
         <thead>
         <tr>
-            <th>ID</th>
+            <th>№</th>
             <th>Название книги</th>
             <th>Цена</th>
             <th>Количество</th>
@@ -149,28 +86,28 @@
             <th>Действие</th>
         </tr>
         </thead>
-        <tbody th:each="book : ${cart}">
+        <tbody th:each="cartItem, iterStat : ${cart}">
         <tr>
             <td>
-                <div th:text="${book.getBook().getBookId()}"></div>
+                <div th:text="${iterStat.index + 1}"></div>
             </td>
             <td>
-                <a th:href="@{/book/{id}(id=${book.getBook().getBookId()})}" th:text="${book.getBook().getTitle()}"></a>
+                <a style="color: #333" th:href="@{/book/{id}(id=${cartItem.getBook().getBookId()})}" th:text="${cartItem.getBook().getTitle()}"></a>
             </td>
             <td>
-                <div th:text="${book.getBook().getPrice()}"></div>
+                <div th:text="${cartItem.getBook().getPrice()}"></div>
             </td>
             <td>
-                <div th:text="${book.getAmount()}"></div>
+                <div th:text="${cartItem.getAmount()}"></div>
 
             </td>
             <td>
-                <div th:text="${book.getBook().getPrice()*book.getAmount()}"></div>
+                <div th:text="${cartItem.getBook().getPrice()*cartItem.getAmount()}"></div>
             </td>
             <td>
                 <div>
                     <form th:method="DELETE" th:action="@{/cart}">
-                        <input type="hidden" name="book_id" th:value="${book.getBook().getBookId()}">
+                        <input type="hidden" name="book_id" th:value="${cartItem.getBook().getBookId()}">
                         <button type="submit" class="delete-btn">Удалить из корзины</button>
                     </form>
                 </div>

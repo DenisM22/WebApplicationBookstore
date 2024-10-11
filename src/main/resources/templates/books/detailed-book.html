@@ -5,197 +5,25 @@
     <meta charset="utf-8">
     <title th:text="${book.getTitle()}"></title>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png"/>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        header {
-            background-color: #282c34;
-            padding: 10px 20px;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-links a, .nav-links button {
-            color: #fff;
-            text-decoration: none;
-            margin-left: 10px;
-            font-size: 16px;
-            transition: color 0.3s;
-            padding: 10px 20px;
-            background-color: #61dafb;
-            border-radius: 5px;
-            text-align: center;
-            border: none;
-        }
-
-        .nav-links .btn {
-            background-color: #61dafb;
-            color: #282c34;
-        }
-
-        .nav-links a:hover, .nav-links button:hover {
-            background-color: #21a1f1;
-            color: #fff;
-        }
-
-        .profile-container {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-        }
-
-        .profile-container img {
-            border-radius: 50%;
-            margin-right: 10px;
-            width: 32px;
-            height: 32px;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 5px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #fff;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        h3 {
-            color: #333;
-        }
-
-        .book-details {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .book-details img {
-            max-width: 300px;
-            height: auto;
-            margin-right: 20px;
-        }
-
-        .book-info {
-            flex: 1;
-        }
-
-        .book-info div {
-            margin-bottom: 10px;
-        }
-
-        .rate {
-            font-size: 1.5em;
-        }
-
-        .green {
-            color: green;
-        }
-
-        .yellow {
-            color: orange;
-        }
-
-        .red {
-            color: red;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
-        .new-book {
-            color: green;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .genres, .price, .availability {
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .description {
-            margin-bottom: 20px;
-        }
-
-        .characteristics {
-            margin-bottom: 20px;
-        }
-
-        .characteristics span {
-            display: inline-block;
-            width: 150px;
-        }
-
-        .cart-actions, .manage-actions {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .cart-actions button, .manage-actions button, .cart-actions a, .manage-actions a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #21a1f1;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 1em;
-            text-align: center;
-            width: 200px;
-        }
-
-        .cart-actions button:hover, .manage-actions button:hover, .cart-actions a:hover, .manage-actions a:hover {
-            background-color: #61dafb;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="../../static/styles/style.css"/>
 </head>
 
 <body>
 
 <header>
-    <h1><a th:href="@{/}" style="color: white; text-decoration: none">Electronic Book Store</a></h1>
+    <h1><a th:href="@{/}">Electronic Book Store</a></h1>
     <div class="nav-links">
         <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/employee/add-book}" class="btn">Добавить новую книгу</a>
-        <a th:if="${user.getRole().equals('CLIENT')}" th:href="@{/cart}" class="btn">Посмотреть корзину</a>
         <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/book/{id}/edit(id=${book.getBookId()})}" class="btn">Редактировать книгу</a>
         <form th:if="${user.getRole().equals('EMPLOYEE')}" th:method="DELETE" th:action="@{/book/{id}(id=${book.getBookId()})}" th:object="${book}" class="delete-form">
             <button type="submit" class="btn">Удалить книгу</button>
         </form>
+        <a th:if="${user.getRole().equals('CLIENT')}" th:href="@{/cart}" class="btn">Посмотреть корзину</a>
     </div>
     <div class="profile-container">
         <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-        <a th:href="@{/profile}" th:text="${user.getUsername()}"></a>
+        <a th:href="@{/profile}" th:text="${user.getUsername()}">User</a>
     </div>
 </header>
 
@@ -206,7 +34,7 @@
         <img th:src="${book.getImagePath()}" alt="Book Image"/>
         <div class="book-info">
             <div class="rate"
-                 th:text="${book.getRate()}"
+                 th:text="${#numbers.formatDecimal(book.getRate(), 1, 1)}"
                  th:classappend="${book.getRate() > 8 ? 'green bold' : (book.getRate() > 5 ? 'yellow bold' : 'red bold')}">
             </div>
 
@@ -219,11 +47,11 @@
             <div class="cart-actions" th:if="${user.getRole().equals('CLIENT') && book.getAmount() > 0}">
                 <form th:method="POST" th:action="@{/cart}">
                     <input type="hidden" th:field="*{book.bookId}" th:value="${book.getBookId()}">
-                    <div th:if="${containsCart}">
+                    <div th:if="${countCart > 0}">
                         <p>Товар уже есть в корзине в количестве <span th:text="${countCart}"></span></p>
                         <button type="submit">Добавить еще</button>
                     </div>
-                    <div th:unless="${containsCart}">
+                    <div th:unless="${countCart > 0}">
                         <button type="submit">Добавить в корзину</button>
                     </div>
                 </form>

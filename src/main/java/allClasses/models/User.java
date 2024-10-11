@@ -26,8 +26,8 @@ public class User implements UserDetails {
     private String username;
 
     @NotBlank(message = "Пароль не должен быть пустым")
-    @Size(min = 5, max = 50, message = "Пароль должен быть от 5 до 50 символов")
-    @Column(name = "password", nullable = false, length = 50)
+    @Size(min = 5, max = 255, message = "Пароль должен быть от 5 до 255 символов")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "role", nullable = false)
@@ -40,6 +40,7 @@ public class User implements UserDetails {
     private List<Order> orders;
 
     public User() {
+        this.role = "CLIENT";
     }
 
     public User(String username, String password) {

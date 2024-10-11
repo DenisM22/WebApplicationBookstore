@@ -3,7 +3,6 @@ package allClasses.models;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,18 +18,20 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderBook> orderBooks;
-
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createdAt;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderBook> orderBooks;
+
     public Order() {
     }
 
-    public Order(User user) {
+    public Order(User user, List<OrderBook> orderBooks) {
         this.user = user;
+        this.orderBooks = orderBooks;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
     public long getOrderId() {
@@ -49,19 +50,19 @@ public class Order {
         this.user = user;
     }
 
-    public List<OrderBook> getOrderBooks() {
-        return orderBooks;
-    }
-
-    public void setOrderBooks(List<OrderBook> orderBooks) {
-        this.orderBooks = orderBooks;
-    }
-
     public Timestamp getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<OrderBook> getOrderBooks() {
+        return orderBooks;
+    }
+
+    public void setOrderBooks(List<OrderBook> orderBooks) {
+        this.orderBooks = orderBooks;
     }
 }

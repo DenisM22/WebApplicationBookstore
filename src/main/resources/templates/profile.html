@@ -5,29 +5,9 @@
     <meta charset="utf-8">
     <title>Профиль</title>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2702/2702134.png" />
+    <link rel="stylesheet" href="/styles/style.css"/>
+    <link rel="stylesheet" href="../../static/styles/style.css"/>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -58,17 +38,6 @@
         a {
             color: #21a1f1;
             text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .profile-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
         }
 
         .profile-info {
@@ -103,17 +72,26 @@
     </style>
 </head>
 
-<body>
+<header>
+    <h1><a th:href="@{/}" style="color: white; text-decoration: none">Electronic Book Store</a></h1>
+    <div class="nav-links">
+        <a th:if="${user.getRole().equals('EMPLOYEE')}" th:href="@{/employee/add-book}" class="btn">Добавить новую книгу</a>
+        <a th:if="${user.getRole().equals('CLIENT')}" th:href="@{/cart}" class="btn">Посмотреть корзину</a>
+    </div>
+    <div class="profile-container">
+        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+        <a th:href="@{/profile}" th:text="${user.getUsername()}" style="color: white">User</a>
+    </div>
+</header>
 
+<body>
 <div class="container">
     <h1>Профиль</h1>
 
-    <div class="profile-container">
-        <div class="profile-info">
-            <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
-            <div>ID: <span th:text="${user.getUserId()}"></span></div>
-            <div>Имя: <span th:text="${user.getUsername()}"></span></div>
-        </div>
+    <div class="profile-info">
+        <img src="https://cdn-icons-png.flaticon.com/32/1144/1144760.png" alt="Profile Picture">
+        <div>ID: <span th:text="${user.getUserId()}"></span></div>
+        <div>Имя: <span th:text="${user.getUsername()}"></span></div>
         <a class="logout-btn" href="/logout">Выйти из профиля</a>
     </div>
 
@@ -121,29 +99,43 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Название книги</th>
-            <th>Цена</th>
-            <th>Количество</th>
-            <th>Сумма</th>
+            <th>ID заказа</th>
             <th>Дата покупки</th>
         </tr>
         </thead>
         <tbody th:each="order : ${orders}">
         <tr>
-            <td th:text="${order.id}"></td>
-            <td th:text="${order.name}"></td>
-            <td th:text="${order.price}"></td>
-            <td th:text="${order.amount}"></td>
-            <td th:text="${order.price * order.amount}"></td>
+            <td th:text="${order.orderId}"></td>
             <td th:text="${#strings.substring(order.createdAt.toString(), 0, 16)}"></td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                    <tr>
+                        <th>Название книги</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Сумма</th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="orderBook : ${order.orderBooks}">
+                    <tr>
+                        <td th:text="${orderBook.book.title}"></td>
+                        <td th:text="${orderBook.book.price}"></td>
+                        <td th:text="${orderBook.amount}"></td>
+                        <td th:text="${orderBook.book.price * orderBook.amount}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
         </tr>
         </tbody>
         <tfoot>
         <tr>
-            <th colspan="5">Сумма покупок:</th>
+            <th colspan="1">Сумма покупок:</th>
             <th>
-                <div style="text-align: left" th:text="${totalCheck}"></div>
+                <div style="text-align: left;" th:text="${totalCheck}"></div>
             </th>
         </tr>
         </tfoot>

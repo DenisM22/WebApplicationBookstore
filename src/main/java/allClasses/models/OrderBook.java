@@ -5,17 +5,15 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "orders_books")
+@IdClass(OrderBookId.class)
 public class OrderBook implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private long id;
-
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
@@ -30,14 +28,6 @@ public class OrderBook implements Serializable {
         this.order = order;
         this.book = book;
         this.amount = amount;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Order getOrder() {
@@ -63,4 +53,5 @@ public class OrderBook implements Serializable {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
 }

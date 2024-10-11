@@ -1,44 +1,46 @@
 package allClasses.controllers;
 
-import allClasses.dao.BookDAO;
-import allClasses.dao.CartDAO;
 import allClasses.models.Book;
 import allClasses.models.User;
+import allClasses.services.BooksService;
+import allClasses.services.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class BooksController {
 
-    private final BookDAO bookDAO;
-    private final CartDAO cartDAO;
-    private long userId;
+    private final BooksService booksService;
+    private final UsersService usersService;
+    private User user;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, CartDAO cartDAO) {
-        this.bookDAO = bookDAO;
-        this.cartDAO = cartDAO;
+    public BooksController(BooksService booksService, UsersService usersService) {
+        this.booksService = booksService;
+        this.usersService = usersService;
     }
 
     // Все книги
     @GetMapping
     public String showAllBooks(Model model) {
-        model.addAttribute("books", bookDAO.getAllBooks());
+        model.addAttribute("books", booksService.findAllBooks());
         return "books/books";
     }
 
     // Детальная информация о книге
     @GetMapping("/book/{id}")
     public String showBook(@PathVariable("id") long bookId, Model model) {
-        model.addAttribute("book", bookDAO.getBook(bookId));
-        model.addAttribute("containsCart", cartDAO.cartContainsBook(userId, bookId));
-        model.addAttribute("countCart", cartDAO.countCart(userId, bookId));
+        model.addAttribute("book", booksService.findBookById(bookId));
+        model.addAttribute("countCart", booksService.countCart(user, bookId));
         return "books/detailed-book";
     }
 
@@ -57,41 +59,42 @@ public class BooksController {
         if (bindingResult.hasErrors())
             return "books/add-book";
 
-        bookDAO.addNewBook(book);
+        booksService.saveBook(book);
         return "redirect:/";
     }
 
     // Форма для редактирования книги
     @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/book/{id}/edit")
-    public String showEditForm(@PathVariable("id") long id, Model model) {
-        model.addAttribute("book", bookDAO.getBook(id));
+    public String showEditForm(@PathVariable("id") long bookId, Model model) {
+        Book book = booksService.findBookById(bookId);
+        model.addAttribute("book", book);
         return "books/edit";
     }
 
     // Редактирование книги
     @PreAuthorize("hasRole('EMPLOYEE')")
-    @PatchMapping("/book/{id}")
-    public String editBook(@ModelAttribute("book") @Valid Book book,
-                           BindingResult bindingResult, @PathVariable long id) {
+    @PatchMapping("/book/{id}/edit")
+    public String editBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "books/edit";
-        bookDAO.editBook(id, book);
+
+        booksService.editBook(book);
         return "redirect:/book/{id}";
     }
 
     // Удаление книги
     @PreAuthorize("hasRole('EMPLOYEE')")
     @DeleteMapping("/book/{id}")
-    public String deleteBook(@PathVariable("id") Long id) {
-        bookDAO.deleteBook(id);
+    public String deleteBook(@PathVariable("id") long bookId) {
+        booksService.deleteBookById(bookId);
         return "redirect:/";
     }
 
     // Получить текущего пользователя
     @ModelAttribute("user")
     public User getCurrentUser(@AuthenticationPrincipal User user) {
-        this.userId = user.getUserId();
+        this.user = user;
         return user;
     }
 

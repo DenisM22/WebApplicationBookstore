@@ -15,7 +15,7 @@ public class MainAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(MainAspect.class);
 
-    @Before("execution (public * allClasses.dao.BookDAO.*(..))")
+    @Before("execution (public * allClasses.services.BooksService.*(..))")
     public void beforeAdvice(JoinPoint joinPoint) {
         logger.info("Вызов метода " + joinPoint.getSignature().getName());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

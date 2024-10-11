@@ -1,8 +1,8 @@
 package allClasses.controllers;
 
-import allClasses.dao.CartDAO;
-import allClasses.dao.UserDAO;
 import allClasses.models.User;
+import allClasses.services.CartsService;
+import allClasses.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,22 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cart")
 public class CartsController {
 
-    private final CartDAO cartDAO;
-    private final UserDAO userDAO;
-    private long userId;
+    private final CartsService cartsService;
+    private final UsersService usersService;
+    private User user;
 
     @Autowired
-    public CartsController(CartDAO cartDAO, UserDAO userDAO) {
-        this.cartDAO = cartDAO;
-        this.userDAO = userDAO;
+    public CartsController(CartsService cartsService, UsersService usersService) {
+        this.cartsService = cartsService;
+        this.usersService = usersService;
     }
 
     // Показать корзину
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping
     public String showCart(Model model) {
-        model.addAttribute("cart", cartDAO.getCart(userId));
-        model.addAttribute("totalCheck", cartDAO.totalCheck(userId));
+        model.addAttribute("cart", cartsService.findCart(user));
+        model.addAttribute("totalCheck", cartsService.totalCheck(user));
         return "cart";
     }
 
@@ -37,7 +37,7 @@ public class CartsController {
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
     public String addToCart(@RequestParam("bookId") long bookId) {
-        cartDAO.addToCart(userId, bookId);
+        cartsService.addToCart(user, bookId);
         return "redirect:/cart";
     }
 
@@ -45,7 +45,7 @@ public class CartsController {
     @PreAuthorize("hasRole('CLIENT')")
     @DeleteMapping("/clear")
     public String clearCart() {
-        cartDAO.clearCart(userId);
+        cartsService.clearCart(user);
         return "redirect:/cart";
     }
 
@@ -53,7 +53,7 @@ public class CartsController {
     @PreAuthorize("hasRole('CLIENT')")
     @DeleteMapping
     public String deleteFromCart(@RequestParam("book_id") long bookId) {
-        cartDAO.deleteFromCart(userId, bookId);
+        cartsService.deleteFromCart(user, bookId);
         return "redirect:/cart";
     }
 
@@ -61,14 +61,14 @@ public class CartsController {
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping("/add-order")
     public String addToOrders() {
-        userDAO.addToOrders(userId);
+        usersService.saveOrder(user);
         return "redirect:/cart";
     }
 
     // Получить текущего пользователя
     @ModelAttribute("user")
     public User getCurrentUser(@AuthenticationPrincipal User user) {
-        this.userId = user.getUserId();
+        this.user = user;
         return user;
     }
 
