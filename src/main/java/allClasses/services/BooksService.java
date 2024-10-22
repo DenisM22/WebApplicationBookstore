@@ -5,6 +5,7 @@ import allClasses.models.User;
 import allClasses.repositories.BooksRepository;
 import allClasses.repositories.CartsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,9 @@ public class BooksService  {
         this.cartsRepository = cartsRepository;
     }
 
-    public List<Book> findAllBooks() {
+    public List<Book> findAllBooks(String sort) {
+        if (sort != null)
+            return booksRepository.findAll(Sort.by(sort));
         return booksRepository.findAll();
     }
 

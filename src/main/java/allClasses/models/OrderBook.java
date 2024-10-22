@@ -1,11 +1,18 @@
 package allClasses.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 @Entity
 @Table(name = "orders_books")
 @IdClass(OrderBookId.class)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderBook implements Serializable {
 
     @Id
@@ -20,38 +27,5 @@ public class OrderBook implements Serializable {
 
     @Column(name = "amount", nullable = false)
     private int amount;
-
-    public OrderBook() {
-    }
-
-    public OrderBook(Order order, Book book, int amount) {
-        this.order = order;
-        this.book = book;
-        this.amount = amount;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
 
 }

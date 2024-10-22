@@ -49,6 +49,7 @@ h1 {
     text-align: center;
     border: none;
     user-select: none;
+    cursor: pointer;
 }
 
 .nav-links a:hover, .nav-links button:hover {
@@ -208,4 +209,17 @@ h1 {
 
 .book-item a:hover {
     color: #61dafb;
+}
+
+.sort-buttons button {
+    width: 100%;
+    margin: 5px;
+    padding: 10px;
+    font-size: 12px;
+    background-color: #61dafb;
+    color: #333;
+    border-radius: 5px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
 }

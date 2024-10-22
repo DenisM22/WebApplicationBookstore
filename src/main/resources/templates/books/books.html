@@ -24,6 +24,24 @@
 </header>
 
 <div class="grid-container">
+
+    <div class="sort-buttons" style="width: fit-content">
+        <form th:method="GET" th:action="@{/}">
+            <input type="hidden" name="sort" value="title"/>
+            <button type="submit">Сортировать по названию</button>
+        </form>
+
+        <form th:method="GET" th:action="@{/}">
+            <input type="hidden" name="sort" value="rate"/>
+            <button type="submit">Сортировать по рейтингу</button>
+        </form>
+
+        <form th:method="GET" th:action="@{/}">
+            <input type="hidden" name="sort" value="price"/>
+            <button type="submit">Сортировать по цене</button>
+        </form>
+    </div>
+
     <div class="book-item" th:each="book : ${books}">
         <a th:href="@{/book/{id}(id=${book.getBookId()})}">
             <img th:src="${book.getImagePath()}" alt="Book Image" />

@@ -2,11 +2,15 @@ package allClasses.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Table (name = "books")
+@Data
+@AllArgsConstructor
 public class Book {
 
     @Id
@@ -81,134 +85,6 @@ public class Book {
         imagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtUGZqmALjP_ea_LlkL-Jj5fPeP9FUM0Ol4A&s";
     }
 
-    public long getBookId() {
-        return bookId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public int getRelease() {
-        return release;
-    }
-
-    public String getGenres() {
-        return genres;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getISBN() {
-        return ISBN;
-    }
-
-    public int getAmountPages() {
-        return amountPages;
-    }
-
-    public double getRate() {
-        return rate;
-    }
-
-    public boolean isLatest() {
-        return latest;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public void setRelease(int release) {
-        this.release = release;
-    }
-
-    public void setGenres(String genres) {
-        this.genres = genres;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
-    }
-
-    public void setAmountPages(int amountPages) {
-        this.amountPages = amountPages;
-    }
-
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
-    public void setLatest(boolean latest) {
-        this.latest = latest;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public List<Cart> getCart() {
-        return cart;
-    }
-
-    public void setCart(List<Cart> cart) {
-        this.cart = cart;
-    }
-
-    public List<OrderBook> getOrderBooks() {
-        return orderBooks;
-    }
-
-    public void setOrderBooks(List<OrderBook> orderBooks) {
-        this.orderBooks = orderBooks;
-    }
-
     public String getAmountView() {
         String result;
         if (amount > 5)
@@ -220,11 +96,5 @@ public class Book {
 
         return result;
     }
-
-    public void addToCart(Cart cart) {
-        this.cart.add(cart);
-    }
-
-
 
 }

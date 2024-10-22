@@ -3,36 +3,31 @@ package allClasses.controllers;
 import allClasses.models.Book;
 import allClasses.models.User;
 import allClasses.services.BooksService;
-import allClasses.services.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 public class BooksController {
 
     private final BooksService booksService;
-    private final UsersService usersService;
     private User user;
 
     @Autowired
-    public BooksController(BooksService booksService, UsersService usersService) {
+    public BooksController(BooksService booksService) {
         this.booksService = booksService;
-        this.usersService = usersService;
     }
 
     // Все книги
     @GetMapping
-    public String showAllBooks(Model model) {
-        model.addAttribute("books", booksService.findAllBooks());
+    public String showAllBooks(@RequestParam(value = "sort", required = false) String sort,
+                               Model model) {
+        model.addAttribute("books", booksService.findAllBooks(sort));
         return "books/books";
     }
 
@@ -75,7 +70,8 @@ public class BooksController {
     // Редактирование книги
     @PreAuthorize("hasRole('EMPLOYEE')")
     @PatchMapping("/book/{id}/edit")
-    public String editBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+    public String editBook(@ModelAttribute("book") @Valid Book book,
+                           BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "books/edit";
 
